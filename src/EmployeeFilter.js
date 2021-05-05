@@ -61,13 +61,13 @@ class EmployeeFilter extends Component {
     const salary = event.target.value;
     console.log(this.state);
     this.setState({
-      employees: (salary)?this.state.employees.filter((c) => c.salary == salary):initialState.employees,redirect: true
+      employees: (salary)?this.state.employees.filter((c) => c.salary === salary):initialState.employees,redirect: true
     });
     console.log(this.state.employees)
   }
 
   render(){
-    const { redirect } = this.state
+    //const { redirect } = this.state
       return ( 
           
         <form   >

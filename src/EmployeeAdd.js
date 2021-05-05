@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addEmployee } from './data/actions/employee';
+
 
 class EmployeeAdd extends Component {
   componentWillMount(){
     this.setState({
-        ...this.props.location.state, redirect: false 
+      //...this.props.location.state, 
+      redirect: false
     })
+    //console.log(this.props);
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
     let employee = {
-      id: this.state.nextId,
       name: event.target.name.value,
       position: event.target.position.value,
       salary: event.target.salary.value
     };
-    this.setState({
-      employees: this.state.employees.concat(employee), nextId: this.state.nextId + 1, redirect:true});
+    this.props.dispatch(addEmployee(employee));
+    this.setState({redirect:true});
   }
 
     render(){
-      const { redirect } = this.state
+      const { redirect } = this.state;
         return ( 
-           redirect ? ( <Redirect to={{pathname:'/', state:this.state}} />) : (
+           redirect ? ( <Redirect to={{pathname:'/', }} />) : (
           <form onSubmit={this.handleSubmit} className='create-employee-form' >
               <input type="text" placeholder="Name" name="name" className='create-employee-details'/> 
               <input type="text" placeholder="Positon" name="position" className='create-employee-details'/> 
@@ -34,4 +38,6 @@ class EmployeeAdd extends Component {
       }
     }
 
-export default EmployeeAdd
+
+
+export default connect()(EmployeeAdd)

@@ -1,49 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import EmployeeItem from './EmployeeItem';
+import { connect } from "react-redux";
+import { deleteEmployee } from './data/actions/employee';
 
-
-const initialState = {
-    employees:[
-        {
-            "id": 1,
-            "name": "Mario Patch Mod",
-            "position": "dev patch",
-            "salary": 65000
-        },
-        {
-            "name": "Mario Patch",
-            "salary": 6000,
-            "position": "dev",
-            "id": 2
-        },
-        {
-            "name": "Mario Post",
-            "salary": 55000,
-            "position": "Sr dev",
-            "id": 3
-        }
-    ],
-    nextId: 4
-    }
-
-  export default class Home extends Component {
+  class Home extends Component {
       componentWillMount() {
-          let newState = this.props.location.state ? this.props.location.state : initialState
-          this.setState(() => ({
-              ...newState 
-          })
-            )
+        
       }
 
       removeEmployee = (employee) => {
-          this.setState((state) => ({
-            employees: state.employees.filter((c) => c.id !== employee.id)
-          }))
+          this.props.reduxDeleteEmployee(employee.id);
       }
       
       editEmployee = (employee) => {
-        <Link to={{ pathname: '/edit', state: this.state }}>Edit</Link>
+        <Link to={{ pathname: '/edit'}}>Edit</Link>
      }
 
       render(){
@@ -53,12 +24,26 @@ const initialState = {
                   <Link to={{ pathname: '/filter', state: this.state }}>Search</Link>
             <ol className = 'employees-list'>
                       {
-                          this.state.employees.map(employee => (
+                          this.props.employees.map(employee => (
                               <EmployeeItem key={employee.id} employee={employee} onDeleteEmployee={this.removeEmployee} onEditEmployee={ this.editEmployee}/>
                               
                       ))}
             </ol>
           </div>
-          );
+          )
       }
-  }
+};
+
+const mapStateToProps = (reduxState) => {
+    return {
+        employees: reduxState.data,
+    };
+ };
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        reduxDeleteEmployee: (id) => dispatch(deleteEmployee(id))
+    };
+};
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Home)
